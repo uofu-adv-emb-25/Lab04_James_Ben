@@ -1,4 +1,6 @@
 #include "signaling.h"
+#include "fifo.h"
+
 #include <stdio.h>
 
 
@@ -52,4 +54,9 @@ BaseType_t signal_request_calculate(SemaphoreHandle_t request, SemaphoreHandle_t
     
     return result;
     
+}
+
+void fifo_worker_handler(QueueHandle_t requests, QueueHandle_t results, int id)
+{
+    return;
 }
