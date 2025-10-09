@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 
-
+/*
 
 void signal_handle_calculation(SemaphoreHandle_t request, SemaphoreHandle_t response, struct signal_data *data)
 {
@@ -28,5 +28,28 @@ BaseType_t signal_request_calculate(SemaphoreHandle_t request, SemaphoreHandle_t
     xSemaphoreTake(request, portMAX_DELAY);
     
     return data->output;
+    
+}
+
+*/
+
+void signal_handle_calculation(SemaphoreHandle_t request, SemaphoreHandle_t response, struct signal_data *data)
+{
+    // TASK 2
+    xSemaphoreTake(request, portMAX_DELAY);
+    
+    printf("Task2: From task2, data-> input is %d\n", data->input);
+    data->output = data->input + 5;
+    xSemaphoreGive(response);
+}
+
+BaseType_t signal_request_calculate(SemaphoreHandle_t request, SemaphoreHandle_t response, struct signal_data *data)
+{
+    //  TASK 1
+    printf("Task1: From task1, data input is: %d\n", data->input);
+    xSemaphoreGive(request);
+    BaseType_t result = xSemaphoreTake(response, 666);
+    
+    return result;
     
 }
