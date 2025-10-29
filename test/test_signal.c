@@ -113,15 +113,19 @@ void runner_thread (__unused void *args)
 {
     vTaskDelay(5000);
     
-    printf("Starting test run.\n");
-    UNITY_BEGIN();
-    RUN_TEST(test_noop);
-    RUN_TEST(test_out_of_order);
-    RUN_TEST(test_request);
-    RUN_TEST(test_noone_home);
-    UNITY_END();
+    for ( ;; ) {
+        printf("Starting test run.\n");
+        UNITY_BEGIN();
+        RUN_TEST(test_noop);
+        RUN_TEST(test_out_of_order);
+        RUN_TEST(test_request);
+        RUN_TEST(test_noone_home);
+        UNITY_END();
+
+        vTaskDelay(200);
+    }
     
-    for (;;) { sleep_ms(5000); }
+    //for (;;) { sleep_ms(5000); }
 }
 
 int main (void)

@@ -1,5 +1,5 @@
-add_executable(mytest test_signal.c ../src/signaling.c unity_config.c)
-#add_executable(mytest test_fifo.c ../src/signaling.c unity_config.c)
+#add_executable(mytest test_signal.c ../src/signaling.c unity_config.c)
+add_executable(mytest test_fifo.c ../src/signaling.c unity_config.c)
 
 
 

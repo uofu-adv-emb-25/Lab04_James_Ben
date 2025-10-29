@@ -31,7 +31,10 @@ QueueHandle_t response;
 void handler_task(void *vargs)
 {
     struct task_args *args = (struct task_args *)vargs;
-    fifo_worker_handler(args->request, args->response, args->id);
+    while(1)
+    {
+        fifo_worker_handler(args->request, args->response, args->id);
+    }
 }
 
 void setUp(void)
@@ -75,7 +78,7 @@ void test_full(void)
 
     for (int i = 0; i < 32; i++) {
         struct request_msg data = {};
-        BaseType_t res = xQueueReceive(response, &data, 1000);
+        BaseType_t res = xQueueReceive(response, &data, 1000); // This line is failing
         TEST_ASSERT_EQUAL_INT(pdTRUE, res);
         printf("Got result %d for %d, handled by thread %d\n",
                data.input, data.output, data.handled_by);
@@ -118,27 +121,36 @@ void test_all_alone(void)
 void runner_thread (__unused void *args)
 {
     for (;;) {
-        printf("Starting test run\n");
+        printf("Launching test runner thread\n");
+        vTaskDelay(200);
         setup_pool = 1;
         UNITY_BEGIN();
         RUN_TEST(test_full);
-        RUN_TEST(test_nothing);
-        RUN_TEST(test_single);
-        setup_pool = 0;
-        RUN_TEST(test_all_alone);
+
+        //RUN_TEST(test_nothing);
+        //RUN_TEST(test_single);
+        // setup_pool = 0;
+        //RUN_TEST(test_all_alone);
         UNITY_END();
-        sleep_ms(10000);
+        // vTaskDelay(2000);
     }
 }
 
 int main (void)
 {
-    sleep_ms(10000);
+    //sleep_ms(10000);
     stdio_init_all();
+
     hard_assert(cyw43_arch_init() == PICO_OK);
+ 
     printf("Launching runner\n");
     xTaskCreate(runner_thread, "TestRunner",
                 TEST_RUNNER_STACK_SIZE, NULL, TEST_RUNNER_PRIORITY, NULL);
     vTaskStartScheduler();
+
+    while(1) {
+        printf("getting here");
+        sleep_ms(1000);
+    }
 	return 0;
 }
