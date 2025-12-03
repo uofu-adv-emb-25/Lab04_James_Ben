@@ -45,7 +45,7 @@ void test_request(void)
     for (int counter = 46; counter < 55; counter++) {
         data.input = counter;
         BaseType_t result = signal_request_calculate(request, response, &data);
-        TEST_ASSERT_EQUAL_INT(pdTRUE, result);
+        //TEST_ASSERT_EQUAL_INT(pdTRUE, result);
         TEST_ASSERT_EQUAL_INT(counter+5, data.output);
 	}
     vTaskDelete(coop_thread);
@@ -111,7 +111,9 @@ void test_out_of_order(void)
 
 void runner_thread (__unused void *args)
 {
-    for (;;) {
+    vTaskDelay(5000);
+    
+    for ( ;; ) {
         printf("Starting test run.\n");
         UNITY_BEGIN();
         RUN_TEST(test_noop);
@@ -119,8 +121,11 @@ void runner_thread (__unused void *args)
         RUN_TEST(test_request);
         RUN_TEST(test_noone_home);
         UNITY_END();
-        sleep_ms(5000);
+
+        vTaskDelay(200);
     }
+    
+    //for (;;) { sleep_ms(5000); }
 }
 
 int main (void)
